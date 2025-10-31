@@ -1,0 +1,16 @@
+# ---------- Dev environment ----------
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS dev
+WORKDIR /app
+
+# Copy project files
+COPY . .
+
+# Install EF Core CLI globally
+RUN dotnet tool install --global dotnet-ef && \
+    echo 'export PATH="$PATH:/root/.dotnet/tools"' >> /root/.bashrc
+
+# Expose development port
+EXPOSE 8080
+
+# Run in watch mode for live reload during development
+CMD ["sh", "-c", "dotnet watch run --urls http://0.0.0.0:8080 --project ./Horus.Api/Horus.Api.csproj"]

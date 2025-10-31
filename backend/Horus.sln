@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Horus.Tests.Integration", "tests\Horus.Tests.Integration\Horus.Tests.Integration.csproj", "{E3DB985F-E025-4938-81FF-2B6C8F0FE452}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Horus.Tests.UnitTests", "tests\Horus.Tests.UnitTests\Horus.Tests.UnitTests.csproj", "{E1F5269E-5777-42A7-A22D-171957BF1F90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Horus.Tests.Unit", "tests\Horus.Tests.Unit\Horus.Tests.Unit.csproj", "{E1F5269E-5777-42A7-A22D-171957BF1F90}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

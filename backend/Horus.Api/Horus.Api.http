@@ -1,6 +1,0 @@
-@Horus.Api_HostAddress = http://localhost:5005
-
-GET {{Horus.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

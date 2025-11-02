@@ -1,0 +1,117 @@
+name: CI — Backend (.NET 9.0)
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: backend-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build, Analyze, Test and Publish artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET 9.0 SDK
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: "9.0.x"
+
+      - name: Setup NuGet caching
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj', '**/Directory.Packages.props') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore backend packages
+        working-directory: backend
+        run: dotnet restore
+
+      - name: dotnet tool restore
+        working-directory: backend
+        run: dotnet tool restore || true
+
+      - name: Run dotnet-format
+        working-directory: backend
+        run: |
+          # verify code style/format against .editorconfig; fails the job if changes would be made
+          dotnet format --verify-no-changes --verbosity minimal
+        continue-on-error: false
+
+      - name: Build solution
+        working-directory: backend
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Run analyzers (treat warnings as warnings, not fail)
+        working-directory: backend
+        run: |
+          # Run build with full verbosity to surface analyzer warnings
+          dotnet build --no-restore --configuration Release -v:minimal
+
+      - name: Run unit tests (TRX + coverage)
+        working-directory: backend
+        run: |
+          # create directory for test outputs
+          mkdir -p tests/TestResults
+          dotnet test --no-build --configuration Release \
+            --logger "trx;LogFileName=tests/TestResults.trx" \
+            --results-directory tests/TestResults \
+            /p:CollectCoverage=true /p:CoverletOutput=tests/TestResults/coverage/ /p:CoverletOutputFormat=lcov
+        continue-on-error: false
+
+      - name: Convert coverage to HTML (optional)
+        working-directory: backend
+        run: |
+          # If reportgenerator is available (via dotnet tool restore), generate human-friendly html
+          if dotnet tool list -g | grep -q reportgenerator; then
+            reportgenerator -reports:tests/TestResults/coverage/*.info -targetdir:tests/TestResults/CoverageReport -reporttypes:Html
+          fi
+        continue-on-error: true
+
+      - name: Upload backend test artifacts (TRX, coverage)
+        if: ${{ env.ACT != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-artifacts
+          path: |
+            backend/tests/TestResults/**
+            backend/**/coverage/**
+            backend/**/tests/TestResults/**
+
+      # Local fallback for act
+      - name: Display test results locally
+        if: ${{ env.ACT == 'true' }}
+        run: |
+          echo "Running locally with act — skipping upload-artifact step."
+          echo "Generated files under backend/tests/TestResults:"
+          find backend/tests/TestResults -type f || true
+
+      - name: Publish test results (GitHub)
+        if: ${{ env.ACT != 'true' }}
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: "**/TestResults/*.trx"
+
+      # Local fallback for act
+      - name: Display test results locally
+        if: ${{env.ACT == 'true' }}
+        run: |
+          echo "Local run detected (act). Skipping GitHub test publishing."
+          echo "Listing generated test result files:"
+          ls -R ./TestResults || true

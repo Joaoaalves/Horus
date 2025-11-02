@@ -10,6 +10,8 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  checks: write
+  statuses: write
 
 concurrency:
   group: backend-ci-${{ github.ref }}
@@ -106,7 +108,7 @@ jobs:
         if: ${{ env.ACT != 'true' }}
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          files: "**/TestResults/*.trx"
+          files: "backend/tests/TestResults/*.trx"
 
       # Local fallback for act
       - name: Display test results locally

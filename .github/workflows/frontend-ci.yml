@@ -1,74 +1,75 @@
 name: CI — Frontend (Node / Next.js)
 
 on:
-    push:
-        branches: ["main", "develop"]
-    pull_request:
-        branches: ["main", "develop"]
-    workflow_dispatch:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
+  workflow_dispatch:
 
 permissions:
-    contents: read
-    pull-requests: write
+  contents: read
+  pull-requests: write
 
 concurrency:
-    group: frontend-ci-${{ github.ref }}
-    cancel-in-progress: true
+  group: frontend-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-    install-and-test:
-        name: Install, Lint, Test and Publish artifacts (Node 24)
-        runs-on: ubuntu-latest
+  install-and-test:
+    name: Install, Lint, Test and Publish artifacts (Node 24)
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v5
-              with:
-                  fetch-depth: 0
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
-            - name: Use Node.js 24
-              uses: actions/setup-node@v6
-              with:
-                  node-version: 24
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
 
-            - name: Install dependencies
-              working-directory: client
-              run: npm ci
+      - name: Install dependencies
+        working-directory: client
+        run: npm ci
 
-            - name: EditorConfig check
-              working-directory: client
-              run: |
-                  npx --yes editorconfig-checker app lib hooks providers contexts || (
-                    echo "::error::EditorConfig validation failed. Please fix style issues." && exit 1
-                  )
+      - name: EditorConfig check
+        working-directory: client
+        run: |
+          npx --yes editorconfig-checker app lib hooks providers contexts || (
+            echo "::error::EditorConfig validation failed. Please fix style issues." && exit 1
+          )
 
-            - name: Run ESLint and post annotations via reviewdog
-              uses: reviewdog/action-eslint@2fee6dd72a5419ff4113f694e2068d2a03bb35dd
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  reporter: github-pr-check
-                  eslint_flags: "client/. --ext .js,.jsx,.ts,.tsx -f unix --ignore-pattern node_modules/*"
+      - name: Run ESLint and post annotations via reviewdog
+        uses: reviewdog/action-eslint@2fee6dd72a5419ff4113f694e2068d2a03bb35dd
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-check
+          workdir: "client"
+          eslint_flags: ". --ext .js,.jsx,.ts,.tsx -f unix --ignore-pattern node_modules/*"
 
-            - name: Run frontend tests (npm test)
-              working-directory: client
-              run: |
-                  if npm run | grep -q "test"; then
-                    npm run test -- --coverage || npm run test
-                  else
-                    echo "No test script defined. Skipping tests."
-                  fi
+      - name: Run frontend tests (npm test)
+        working-directory: client
+        run: |
+          if npm run | grep -q "test"; then
+            npm run test -- --coverage || npm run test
+          else
+            echo "No test script defined. Skipping tests."
+          fi
 
-            - name: Collect test artifacts
-              working-directory: client
-              run: |
-                  mkdir -p artifact-output/frontend
-                  if [ -d coverage ]; then cp -r coverage artifact-output/frontend/; fi
-                  find . -type f \( -name "*.xml" -o -name "junit*.xml" \) -path "*test-results*" -exec cp --parents {} artifact-output/frontend/ \; || true
-                  cp package.json artifact-output/frontend/ || true
-                  cp package-lock.json artifact-output/frontend/ || true
+      - name: Collect test artifacts
+        working-directory: client
+        run: |
+          mkdir -p artifact-output/frontend
+          if [ -d coverage ]; then cp -r coverage artifact-output/frontend/; fi
+          find . -type f \( -name "*.xml" -o -name "junit*.xml" \) -path "*test-results*" -exec cp --parents {} artifact-output/frontend/ \; || true
+          cp package.json artifact-output/frontend/ || true
+          cp package-lock.json artifact-output/frontend/ || true
 
-            - name: Upload frontend test artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                  name: frontend-artifacts
-                  path: client/artifact-output/frontend
+      - name: Upload frontend test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-artifacts
+          path: client/artifact-output/frontend

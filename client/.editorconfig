@@ -1,0 +1,42 @@
+root = true
+
+# default
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = false
+trim_trailing_whitespace = false
+indent_style = tab
+
+# Json
+[*.json]
+indent_style = space
+indent_size = 4
+charset = utf-8
+end_of_line = lf
+
+# Frontend
+[*.{js,jsx,ts,tsx}]
+indent_style = space
+indent_size = 4
+charset = utf-8
+end_of_line = lf
+
+# YAML files
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 4
+charset = utf-8
+end_of_line = lf
+
+# Binaries
+[*.{png,jpg,jpeg,gif,ico,webp,svg,ttf,woff,woff2,eot,otf}]
+binary = true
+
+# Log files, lock files
+[*.log]
+indent_style = space
+indent_size = 4
+charset = utf-8
+end_of_line = lf
+trim_trailing_whitespace = false

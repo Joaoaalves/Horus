@@ -38,7 +38,7 @@ jobs:
             - name: EditorConfig check
               working-directory: client
               run: |
-                  npx --yes editorconfig-checker app lib hooks contexts providers || (
+                  npx --yes editorconfig-checker app lib hooks providers contexts || (
                     echo "::error::EditorConfig validation failed. Please fix style issues." && exit 1
                   )
 

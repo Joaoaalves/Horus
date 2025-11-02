@@ -43,12 +43,11 @@ jobs:
           )
 
       - name: Run ESLint and post annotations via reviewdog
-        working-directory: client
         uses: reviewdog/action-eslint@2fee6dd72a5419ff4113f694e2068d2a03bb35dd
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check
-          eslint_flags: ". --ext .js,.jsx,.ts,.tsx -f unix"
+          eslint_flags: "client/. --ext .js,.jsx,.ts,.tsx -f unix"
 
       - name: Run frontend tests (npm test)
         working-directory: client

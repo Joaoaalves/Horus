@@ -48,7 +48,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-check
           workdir: "client"
-          eslint_flags: ". --ext .js,.jsx,.ts,.tsx -f unix --ignore-pattern node_modules/*"
+          eslint_flags: . --ext .js,.jsx,.ts,.tsx -f json --ignore-pattern node_modules/*
 
       - name: Run frontend tests (npm test)
         working-directory: client

@@ -27,6 +27,9 @@
         "next/core-web-vitals"
     ],
     "rules": {
+        "ignorePatterns": [
+            "**/node_modules/**"
+        ],
         "indent": [
             "error",
             4,

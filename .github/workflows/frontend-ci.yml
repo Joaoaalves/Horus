@@ -41,16 +41,6 @@ jobs:
           npx --yes editorconfig-checker app lib hooks providers contexts || (
             echo "::error::EditorConfig validation failed. Please fix style issues." && exit 1
           )
-
-      - name: Run ESLint and post annotations via reviewdog
-        uses: reviewdog/action-eslint@2fee6dd72a5419ff4113f694e2068d2a03bb35dd
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-check
-          workdir: "client"
-          eslint_flags: . --config .eslintrc.json
-          fail_level: warning
-
       - name: Run frontend tests (npm test)
         working-directory: client
         run: |

@@ -5,6 +5,7 @@ using Horus.Infrastructure.Processing;
 using Horus.Tests.UnitTests.Infrastructure.Fakes;
 using Horus.Tests.Unit.Domain.Fakes;
 using Horus.Tests.Unit.Builders;
+using Horus.Infrastructure.Database;
 
 namespace Horus.Tests.Unit.Infrastructure.ProcessingTests
 {

@@ -1,7 +1,8 @@
 using Horus.Domain.SeedWork.Mediator;
+using Horus.Infrastructure.Processing;
 using Microsoft.EntityFrameworkCore;
 
-namespace Horus.Infrastructure.Processing
+namespace Horus.Infrastructure.Database
 {
 	public class UnitOfWork(
 		DbContext context,

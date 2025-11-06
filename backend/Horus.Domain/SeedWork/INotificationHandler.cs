@@ -1,7 +1,7 @@
 namespace Horus.Domain.SeedWork
 {
-    public interface INotificationHandler<TNotification> where TNotification : INotification
-    {
-        Task Handle(TNotification notification, CancellationToken cancellationToken);
-    }
+	public interface INotificationHandler<TNotification> where TNotification : INotification
+	{
+		Task Handle(TNotification notification, CancellationToken cancellationToken);
+	}
 }

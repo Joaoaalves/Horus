@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Horus.Domain.SeedWork;
 
 namespace Horus.Api.SeedWork

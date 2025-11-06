@@ -1,4 +1,5 @@
 using Horus.Api.Configurations;
+using Horus.Infrastructure.Processing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ if (app.Environment.IsDevelopment())
 
 // Modules
 services.AddConfigurations();
+services.AddMediatorModule();
 
 app.UseHttpsRedirection();
 

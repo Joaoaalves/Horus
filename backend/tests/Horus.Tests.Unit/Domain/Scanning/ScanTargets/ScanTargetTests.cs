@@ -2,7 +2,7 @@ using Horus.Domain.Scanning.ScanTargets;
 using Horus.Domain.SeedWork;
 using Horus.Tests.Unit.Builders;
 
-namespace Horus.Tests.Unit.Domain.Scanning.Targets
+namespace Horus.Tests.Unit.Domain.Scanning.ScanTargets
 {
 	public class ScanTargetTests
 	{

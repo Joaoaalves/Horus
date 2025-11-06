@@ -1,3 +1,7 @@
+using Horus.Api.Configurations;
+using Horus.Infrastructure.Database;
+using Horus.Infrastructure.Processing;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -5,12 +9,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+var services = builder.Services;
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
 	app.MapOpenApi();
 }
+
+// Modules
+services.AddConfigurations();
+services.AddMediatorModule();
+services.AddDataAccessModule();
 
 app.UseHttpsRedirection();
 

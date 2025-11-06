@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Horus.Application\Horus.Application.csproj" />
+    <ProjectReference Include="..\Horus.Infrastructure\Horus.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

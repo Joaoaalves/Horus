@@ -1,8 +1,8 @@
 using Horus.Domain.SeedWork;
 
-namespace Horus.Domain.Scanning.ScanTargets.Invariants.ScanTargetName.Rules
+namespace Horus.Domain.SharedKernel.EntityNames.Rules
 {
-	public sealed class ScanTargetNameLengthMustBeInRange(string value) : IBusinessRule
+	public sealed class EntityNameLengthMustBeInRange(string value) : IBusinessRule
 	{
 		private readonly string _targetName = value;
 		private readonly uint _minLength = 3;

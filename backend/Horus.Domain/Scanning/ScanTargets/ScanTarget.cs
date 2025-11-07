@@ -1,6 +1,6 @@
 using Horus.Domain.Scanning.ScanTargets.Invariants.ScanTargetMetadata;
-using Horus.Domain.Scanning.ScanTargets.Invariants.ScanTargetName;
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.EntityNames;
 
 namespace Horus.Domain.Scanning.ScanTargets
 {
@@ -10,13 +10,13 @@ namespace Horus.Domain.Scanning.ScanTargets
 
 		// Attributes
 		public ScanTargetId Id { get; private set; } = default!;
-		public ScanTargetName Name { get; private set; } = default!;
+		public EntityName Name { get; private set; } = default!;
 		public ScanTargetMetadata? Metadata { get; private set; }
 
 		[Obsolete("For EF Only", true)]
 		private ScanTarget() { }
 
-		private ScanTarget(ScanTargetId id, ScanTargetName name, ScanTargetMetadata? metadata = null)
+		private ScanTarget(ScanTargetId id, EntityName name, ScanTargetMetadata? metadata = null)
 		{
 			Id = id;
 			Name = name;
@@ -26,7 +26,7 @@ namespace Horus.Domain.Scanning.ScanTargets
 		public static ScanTarget Create(string name, string? description = null)
 		{
 			var targetId = new ScanTargetId();
-			var targetName = ScanTargetName.FromString(name);
+			var targetName = EntityName.FromString(name);
 			var targetMetadata = string.IsNullOrWhiteSpace(description)
 				? null
 				: ScanTargetMetadata.Create(description);
@@ -36,7 +36,7 @@ namespace Horus.Domain.Scanning.ScanTargets
 
 		public void Rename(string name)
 		{
-			var targetName = ScanTargetName.FromString(name);
+			var targetName = EntityName.FromString(name);
 			Name = targetName;
 		}
 

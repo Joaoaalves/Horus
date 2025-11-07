@@ -1,6 +1,6 @@
-using Horus.Domain.Scanning.ScanTargets.Invariants.ScanTargetMetadata;
 using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.EntityNames;
+using Horus.Domain.Scanning.ScanTargets.ScanTargetMetadatas;
 
 namespace Horus.Domain.Scanning.ScanTargets
 {

@@ -1,6 +1,6 @@
 using Horus.Domain.SeedWork;
 
-namespace Horus.Domain.Scanning.NetworkHosts.Invariants.HostAddress.Rules
+namespace Horus.Domain.Scanning.NetworkHosts.HostAddresses.Rules
 {
 	public class HostAddressMustBeIpOrUrl(string address) : IBusinessRule
 	{

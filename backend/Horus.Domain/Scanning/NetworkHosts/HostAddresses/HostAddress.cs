@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 using Horus.Domain.SeedWork;
 
-namespace Horus.Domain.Scanning.NetworkHosts.Invariants.HostAddress
+namespace Horus.Domain.Scanning.NetworkHosts.HostAddresses
 {
 	public sealed class HostAddress : ValueObject
 	{

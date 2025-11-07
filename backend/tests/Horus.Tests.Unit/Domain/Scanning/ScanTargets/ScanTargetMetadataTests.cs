@@ -1,4 +1,4 @@
-using Horus.Domain.Scanning.ScanTargets.Invariants.ScanTargetMetadata;
+using Horus.Domain.Scanning.ScanTargets.ScanTargetMetadatas;
 using Horus.Domain.SeedWork;
 using Horus.Tests.Unit.Builders;
 

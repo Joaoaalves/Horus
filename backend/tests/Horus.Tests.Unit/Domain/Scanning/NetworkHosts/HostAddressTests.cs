@@ -1,6 +1,5 @@
-using Horus.Domain.Scanning.NetworkHosts.Invariants.HostAddress;
+using Horus.Domain.Scanning.NetworkHosts.HostAddresses;
 using Horus.Domain.SeedWork;
-using Horus.Tests.Unit.Builders;
 
 namespace Horus.Tests.Unit.Domain.Scanning.NetworkHosts
 {

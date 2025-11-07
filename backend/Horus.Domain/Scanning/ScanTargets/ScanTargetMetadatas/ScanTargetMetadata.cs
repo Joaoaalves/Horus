@@ -1,6 +1,6 @@
 using Horus.Domain.SeedWork;
 
-namespace Horus.Domain.Scanning.ScanTargets.Invariants.ScanTargetMetadata
+namespace Horus.Domain.Scanning.ScanTargets.ScanTargetMetadatas
 {
 	public sealed class ScanTargetMetadata : ValueObject
 	{

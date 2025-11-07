@@ -1,6 +1,6 @@
 using Horus.Domain.SeedWork;
 
-namespace Horus.Domain.Scanning.ScanTargets.Invariants.ScanTargetMetadata.Rules
+namespace Horus.Domain.Scanning.ScanTargets.ScanTargetMetadatas.Rules
 {
 	public sealed class ScanTargetDescriptionLengthMustBeInRange(string value) : IBusinessRule
 	{

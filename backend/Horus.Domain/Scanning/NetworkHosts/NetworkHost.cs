@@ -1,4 +1,4 @@
-using Horus.Domain.Scanning.NetworkHosts.Invariants.HostAddress;
+using Horus.Domain.Scanning.NetworkHosts.HostAddresses;
 using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.EntityNames;
 

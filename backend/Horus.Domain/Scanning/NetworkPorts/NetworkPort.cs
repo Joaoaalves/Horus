@@ -1,5 +1,5 @@
 using Horus.Domain.Scanning.NetworkPorts.Invariants.NetworkPortMetadatas;
-using Horus.Domain.Scanning.NetworkPorts.Invariants.NetworkPortNumbers;
+using Horus.Domain.Scanning.NetworkPorts.NetworkPortNumbers;
 using Horus.Domain.SeedWork;
 
 namespace Horus.Domain.Scanning.NetworkPorts

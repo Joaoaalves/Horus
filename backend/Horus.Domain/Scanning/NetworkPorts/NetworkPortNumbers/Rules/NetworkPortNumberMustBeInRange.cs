@@ -1,6 +1,6 @@
 using Horus.Domain.SeedWork;
 
-namespace Horus.Domain.Scanning.NetworkPorts.Invariants.NetworkPortNumbers.Rules
+namespace Horus.Domain.Scanning.NetworkPorts.NetworkPortNumbers.Rules
 {
 	public class NetworkPortNumberMustBeInRange(uint portNumber) : IBusinessRule
 	{

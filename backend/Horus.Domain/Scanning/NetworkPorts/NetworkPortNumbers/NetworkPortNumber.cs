@@ -1,6 +1,6 @@
 using Horus.Domain.SeedWork;
 
-namespace Horus.Domain.Scanning.NetworkPorts.Invariants.NetworkPortNumbers
+namespace Horus.Domain.Scanning.NetworkPorts.NetworkPortNumbers
 {
 	public sealed class NetworkPortNumber : ValueObject
 	{

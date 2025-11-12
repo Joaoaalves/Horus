@@ -55,7 +55,8 @@ namespace Horus.Tests.Unit.Domain.Scanning.ScanTargets
 			var stMetadata = ScanTargetMetadata.Create(value);
 
 			// Assert
-			Assert.Equal(value, stMetadata.Description);
+			Assert.NotNull(stMetadata.Description);
+			Assert.Equal(value, stMetadata.Description.Value);
 		}
 
 		[Fact]
@@ -68,7 +69,8 @@ namespace Horus.Tests.Unit.Domain.Scanning.ScanTargets
 			var stMetadata = ScanTargetMetadata.Create(value);
 
 			// Assert
-			Assert.Equal(value, stMetadata.Description);
+			Assert.NotNull(stMetadata.Description);
+			Assert.Equal(value, stMetadata.Description.Value);
 		}
 	}
 }

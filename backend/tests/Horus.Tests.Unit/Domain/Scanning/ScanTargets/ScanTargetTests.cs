@@ -54,7 +54,8 @@ namespace Horus.Tests.Unit.Domain.Scanning.ScanTargets
 
 			// Assert
 			Assert.NotNull(target.Metadata);
-			Assert.Equal(description, target.Metadata.Description);
+			Assert.NotNull(target.Metadata.Description);
+			Assert.Equal(description, target.Metadata.Description.Value);
 		}
 
 		[Fact]
@@ -86,7 +87,8 @@ namespace Horus.Tests.Unit.Domain.Scanning.ScanTargets
 
 			// Assert
 			Assert.NotNull(target.Metadata);
-			Assert.Equal(description, target.Metadata.Description);
+			Assert.NotNull(target.Metadata.Description);
+			Assert.Equal(description, target.Metadata.Description.Value);
 		}
 
 		[Fact]
@@ -102,7 +104,8 @@ namespace Horus.Tests.Unit.Domain.Scanning.ScanTargets
 
 			// Assert
 			Assert.NotNull(target.Metadata);
-			Assert.Equal(description, target.Metadata.Description);
+			Assert.NotNull(target.Metadata.Description);
+			Assert.Equal(description, target.Metadata.Description.Value);
 		}
 	}
 }

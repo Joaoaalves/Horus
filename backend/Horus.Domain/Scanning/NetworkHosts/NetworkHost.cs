@@ -1,5 +1,6 @@
 using Horus.Domain.Scanning.NetworkHosts.HostAddresses;
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.EntityDescriptions;
 using Horus.Domain.SharedKernel.EntityNames;
 
 namespace Horus.Domain.Scanning.NetworkHosts
@@ -11,28 +12,34 @@ namespace Horus.Domain.Scanning.NetworkHosts
 		// Attributes
 		public NetworkHostId Id { get; } = default!;
 		public EntityName Name { get; private set; } = default!;
+		public EntityDescription? Description { get; private set; } = default!;
 		public HostAddress Address { get; private set; } = default!;
 
 		// For EF
 		[Obsolete("For EF Only", true)]
 		private NetworkHost() { }
 
-		private NetworkHost(NetworkHostId id, EntityName name, HostAddress address)
+		private NetworkHost(NetworkHostId id, EntityName name, HostAddress address, EntityDescription? description = null)
 		{
 			Id = id;
 			Name = name;
+			Description = description;
 			Address = address;
 		}
 
-		public static NetworkHost Create(string name, string address)
+		public static NetworkHost Create(string name, string address, string? description = null)
 		{
 			var hostName = EntityName.FromString(name);
+			var hostDesc = description is not null
+				? EntityDescription.Create(description.Trim())
+				: null;
 			var hostAddr = HostAddress.Create(address);
 
 			return new NetworkHost(
 				new NetworkHostId(),
 				hostName,
-				hostAddr
+				hostAddr,
+				hostDesc
 			);
 		}
 

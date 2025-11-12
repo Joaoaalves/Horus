@@ -1,22 +1,22 @@
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.EntityDescriptions;
 
 namespace Horus.Domain.Scanning.ScanTargets.ScanTargetMetadatas
 {
 	public sealed class ScanTargetMetadata : ValueObject
 	{
-		public string? Description { get; }
+		public EntityDescription? Description { get; }
 
-		private ScanTargetMetadata(string? description)
+		private ScanTargetMetadata(EntityDescription description)
 		{
-			Description = description?.Trim();
+			Description = description;
 		}
 
 		public static ScanTargetMetadata Create(string description)
 		{
-			CheckRule(new Rules.ScanTargetDescriptionCannotBeNullOrEmpty(description));
-			CheckRule(new Rules.ScanTargetDescriptionLengthMustBeInRange(description));
+			var scanTargetDesc = EntityDescription.Create(description);
 
-			return new ScanTargetMetadata(description);
+			return new ScanTargetMetadata(scanTargetDesc);
 		}
 	}
 }

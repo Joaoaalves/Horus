@@ -4,12 +4,12 @@ using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.EntityNames;
 using Horus.Domain.SharedKernel.FilePaths;
 
-namespace Horus.Domain.Notes.Findings
+namespace Horus.Domain.Findings.Notes
 {
-	public sealed class Finding : Entity
+	public sealed class Note : Entity
 	{
 		// Attributes
-		public FindingId Id { get; private init; } = default!;
+		public NoteId Id { get; private init; } = default!;
 		public EntityName Title { get; private set; } = default!;
 		public FilePath FilePath { get; private set; } = default!;
 		public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
@@ -23,9 +23,9 @@ namespace Horus.Domain.Notes.Findings
 
 		// For EF Only
 		[Obsolete("EF Needed", true)]
-		private Finding() { }
+		private Note() { }
 
-		private Finding(FindingId id, EntityName title, FilePath filePath, NetworkHostId? networkHostId = null, ScanTargetId? scanTargetId = null)
+		private Note(NoteId id, EntityName title, FilePath filePath, NetworkHostId? networkHostId = null, ScanTargetId? scanTargetId = null)
 		{
 			Id = id;
 			Title = title;
@@ -34,9 +34,9 @@ namespace Horus.Domain.Notes.Findings
 			NetworkHostId = networkHostId;
 		}
 
-		public static Finding ForNetworkHost(string title, NetworkHostId networkHostId, IFindingPathHandler findingPathHandler)
+		public static Note ForNetworkHost(string title, NetworkHostId networkHostId, INotePathHandler findingPathHandler)
 		{
-			FindingId id = new();
+			NoteId id = new();
 			EntityName findingTitle = EntityName.FromString(title);
 			FilePath path = findingPathHandler.CreateForNetworkHost(id, networkHostId);
 
@@ -47,9 +47,9 @@ namespace Horus.Domain.Notes.Findings
 				networkHostId
 			);
 		}
-		public static Finding ForScanTarget(string title, ScanTargetId scanTargetId, IFindingPathHandler findingPathHandler)
+		public static Note ForScanTarget(string title, ScanTargetId scanTargetId, INotePathHandler findingPathHandler)
 		{
-			FindingId id = new();
+			NoteId id = new();
 			EntityName findingTitle = EntityName.FromString(title);
 			FilePath path = findingPathHandler.CreateForScanTarget(id, scanTargetId);
 

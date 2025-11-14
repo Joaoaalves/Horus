@@ -1,6 +1,7 @@
 using Horus.Domain.Findings.Vulnerabilities.Evidences;
 using Horus.Domain.Findings.Vulnerabilities.Evidences.Rules;
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.SharedRules;
 
 namespace Horus.Tests.Unit.Domain.Findings.Vulnerabilities
 {
@@ -12,7 +13,7 @@ namespace Horus.Tests.Unit.Domain.Findings.Vulnerabilities
 		{
 			// Arrange
 			string invalidEvidence = string.Empty;
-			var rule = new EvidenceCannotBeNullOrEmpty(invalidEvidence);
+			var rule = new StringCannotBeEmptyOrNull(invalidEvidence, nameof(Evidence));
 
 			// Act & Assert
 			var exc = Assert.Throws<BusinessRuleValidationException>(() =>
@@ -27,7 +28,7 @@ namespace Horus.Tests.Unit.Domain.Findings.Vulnerabilities
 		{
 			// Arrange
 			string? invalidEvidence = null;
-			var rule = new EvidenceCannotBeNullOrEmpty(invalidEvidence!);
+			var rule = new StringCannotBeEmptyOrNull(invalidEvidence!, nameof(Evidence));
 
 			// Act & Assert
 			var exc = Assert.Throws<BusinessRuleValidationException>(() =>

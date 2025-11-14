@@ -1,4 +1,5 @@
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.SharedRules;
 
 namespace Horus.Domain.SharedKernel.FilePaths
 {
@@ -13,7 +14,7 @@ namespace Horus.Domain.SharedKernel.FilePaths
 
 		public static FilePath FromString(string value)
 		{
-			CheckRule(new Rules.FilePathCannotBeNull(value));
+			CheckRule(new StringCannotBeEmptyOrNull(value, nameof(FilePath)));
 			CheckRule(new Rules.FilePathMustHaveValidLength(value));
 
 			// Validate directory

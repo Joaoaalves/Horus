@@ -1,5 +1,6 @@
 using System.Text.RegularExpressions;
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.SharedRules;
 
 namespace Horus.Domain.Scanning.NetworkHosts.HostAddresses
 {
@@ -14,7 +15,7 @@ namespace Horus.Domain.Scanning.NetworkHosts.HostAddresses
 
 		public static HostAddress Create(string address)
 		{
-			CheckRule(new Rules.HostAddressCanNotBeNullOrEmpty(address));
+			CheckRule(new StringCannotBeEmptyOrNull(address, nameof(HostAddress)));
 
 			var trimmed = address.TrimEnd('/');
 			var clean = RemoveProtocol(trimmed);

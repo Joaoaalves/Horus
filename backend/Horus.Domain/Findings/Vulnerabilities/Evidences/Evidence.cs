@@ -1,4 +1,5 @@
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.SharedRules;
 
 namespace Horus.Domain.Findings.Vulnerabilities.Evidences
 {
@@ -12,7 +13,7 @@ namespace Horus.Domain.Findings.Vulnerabilities.Evidences
 
 		public static Evidence Create(string value)
 		{
-			CheckRule(new Rules.EvidenceCannotBeNullOrEmpty(value));
+			CheckRule(new StringCannotBeEmptyOrNull(value, nameof(Evidence)));
 			CheckRule(new Rules.EvidenceMustBeAValidJson(value));
 
 			return new Evidence(value.Trim());

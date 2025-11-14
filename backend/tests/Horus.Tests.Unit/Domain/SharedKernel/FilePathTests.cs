@@ -1,6 +1,7 @@
 using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.FilePaths;
 using Horus.Domain.SharedKernel.FilePaths.Rules;
+using Horus.Domain.SharedKernel.SharedRules;
 using Horus.Tests.Unit.Builders;
 
 namespace Horus.Tests.Unit.Domain.SharedKernel
@@ -13,7 +14,7 @@ namespace Horus.Tests.Unit.Domain.SharedKernel
 		{
 			// Arrange
 			string? path = null;
-			var rule = new FilePathCannotBeNull(path);
+			var rule = new StringCannotBeEmptyOrNull(path!, nameof(FilePath));
 
 			// Act & Assert
 			var exc = Assert.Throws<BusinessRuleValidationException>(() => FilePath.FromString(path!));
@@ -25,7 +26,7 @@ namespace Horus.Tests.Unit.Domain.SharedKernel
 		{
 			// Arrange
 			string path = string.Empty;
-			var rule = new FilePathCannotBeNull(path);
+			var rule = new StringCannotBeEmptyOrNull(path, nameof(FilePath));
 
 			// Act & Assert
 			var exc = Assert.Throws<BusinessRuleValidationException>(() => FilePath.FromString(path!));

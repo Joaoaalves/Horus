@@ -2,7 +2,9 @@ using Horus.Domain.Findings.Notes;
 using Horus.Domain.Scanning.NetworkHosts;
 using Horus.Domain.Scanning.ScanTargets;
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.EntityNames;
 using Horus.Domain.SharedKernel.EntityNames.Rules;
+using Horus.Domain.SharedKernel.SharedRules;
 using Horus.Tests.Unit.Builders;
 using Moq;
 
@@ -19,7 +21,7 @@ namespace Horus.Tests.Unit.Domain.Findings.Notes
 			// Arrange
 			string title = string.Empty;
 			ScanTargetId id = new();
-			var rule = new EntityNameCanNotBeNull(title);
+			var rule = new StringCannotBeEmptyOrNull(title, nameof(EntityName));
 			var fakeNotePathHandler = new Mock<INotePathHandler>();
 
 			// Act & Arrange
@@ -33,7 +35,7 @@ namespace Horus.Tests.Unit.Domain.Findings.Notes
 			// Arrange
 			string? title = null;
 			ScanTargetId id = new();
-			var rule = new EntityNameCanNotBeNull(title!);
+			var rule = new StringCannotBeEmptyOrNull(title!, nameof(EntityName));
 
 			var fakeNotePathHandler = new Mock<INotePathHandler>();
 

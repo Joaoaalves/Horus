@@ -1,4 +1,5 @@
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.SharedRules;
 
 namespace Horus.Domain.SharedKernel.EntityNames
 {
@@ -13,7 +14,7 @@ namespace Horus.Domain.SharedKernel.EntityNames
 
 		public static EntityName FromString(string value)
 		{
-			CheckRule(new Rules.EntityNameCanNotBeNull(value));
+			CheckRule(new StringCannotBeEmptyOrNull(value, nameof(EntityName)));
 
 			CheckRule(new Rules.EntityNameLengthMustBeInRange(value));
 

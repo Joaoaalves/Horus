@@ -1,4 +1,5 @@
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.SharedRules;
 
 namespace Horus.Domain.SharedKernel.EntityDescriptions
 {
@@ -13,7 +14,7 @@ namespace Horus.Domain.SharedKernel.EntityDescriptions
 
 		public static EntityDescription Create(string value)
 		{
-			CheckRule(new Rules.EntityDescriotionCannotBeNull(value));
+			CheckRule(new StringCannotBeEmptyOrNull(value, nameof(EntityDescription)));
 			CheckRule(new Rules.EntityDescriptionLengthMustBeInRange(value));
 
 			return new EntityDescription(value.Trim());

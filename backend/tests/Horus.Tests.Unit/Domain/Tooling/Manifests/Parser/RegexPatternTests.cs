@@ -1,6 +1,6 @@
 using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.SharedRules;
-using Horus.Domain.Tooling.Manifests.Parsers.RegexPatterns;
+using Horus.Domain.Tooling.Manifests.Parsers.Payload.Regex;
 
 namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parser
 {

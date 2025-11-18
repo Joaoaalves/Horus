@@ -4,10 +4,9 @@ using Horus.Domain.Tooling.Manifests.Execution.ContainerImages;
 using Horus.Domain.Tooling.Manifests.Identity;
 using Horus.Domain.Tooling.Manifests.Metadata;
 using Horus.Domain.Tooling.Manifests.Metadata.Categories;
-using Horus.Domain.Tooling.Manifests.Metadata.SupportedServices;
 using Horus.Domain.Tooling.Manifests.Parameters;
 using Horus.Domain.Tooling.Manifests.Parsers;
-using Horus.Domain.Tooling.Manifests.Parsers.RegexPatterns;
+using Horus.Domain.Tooling.Manifests.Parsers.Payload.Regex;
 using Horus.Tests.Unit.Domain.Tooling.Manifests.Execution.Fakes;
 
 namespace Horus.Tests.Unit.Domain.Tooling.Manifests
@@ -40,15 +39,16 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests
 
 			// Parameters
 			var paramName = "paramName";
-			var paramType = "paramType";
+			var paramType = "number";
 			bool required = true;
 			IEnumerable<ToolParameter> parameters = [ToolParameter.Create(paramName, paramType, required)];
 
 			// Parser
 			string parserType = "regex";
 			IEnumerable<RegexPattern> patterns = [];
+			var payload = new RegexParserPayload(patterns);
 			var outputPath = "/valid/path";
-			var parser = ToolResultParser.Create(parserType, patterns, outputPath);
+			var parser = ToolResultParser.Create(parserType, payload, outputPath);
 
 			// Act
 			var toolManifest = ToolManifest.Create(identity, metadata, execution, parameters, parser);
@@ -71,10 +71,10 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests
 			Assert.Equal(commandTemplate, toolManifest.Execution.CommandTemplate.Value);
 
 			Assert.Equal(paramName, toolManifest.Parameters[0].Name);
-			Assert.Equal(paramType, toolManifest.Parameters[0].Type);
+			Assert.Equal(paramType, toolManifest.Parameters[0].Type.Value);
 			Assert.Equal(required, toolManifest.Parameters[0].Required);
 
-			Assert.Equal(parserType, toolManifest.ResultParser.Type);
+			Assert.Equal(parserType, toolManifest.ResultParser.Type.Value);
 			Assert.Equal(outputPath, toolManifest.ResultParser.OutputPath.Value);
 		}
 		#endregion

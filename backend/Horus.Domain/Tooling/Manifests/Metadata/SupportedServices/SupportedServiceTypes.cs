@@ -1,4 +1,5 @@
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.SharedRules;
 
 namespace Horus.Domain.Tooling.Manifests.Metadata.SupportedServices
 {
@@ -15,6 +16,8 @@ namespace Horus.Domain.Tooling.Manifests.Metadata.SupportedServices
 		{
 			CheckRule(new Rules.SupportedServiceTypesCannotBeEmpty(serviceTypes));
 
+			foreach (var serv in serviceTypes)
+				CheckRule(new StringCannotBeEmptyOrNull(serv, "SupportedServiceTypes.ServiceTypes[]"));
 			return new SupportedServiceTypes(serviceTypes);
 		}
 

@@ -1,4 +1,5 @@
 using Horus.Domain.SeedWork;
+using Horus.Domain.SharedKernel.SharedRules;
 using Horus.Domain.Tooling.Manifests.Metadata.SupportedServices;
 using Horus.Domain.Tooling.Manifests.Metadata.SupportedServices.Rules;
 
@@ -13,6 +14,30 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Metadata
 			// Arrange
 			var serviceTypes = new HashSet<string>();
 			var rule = new SupportedServiceTypesCannotBeEmpty(serviceTypes);
+
+			// Act & Assert
+			Assert.Throws<BusinessRuleValidationException>(() => SupportedServiceTypes.Create(serviceTypes));
+		}
+
+		[Fact]
+		public void SupportedServices_ShouldThrowBusinessRuleValidationException_WhenReceivesAnEmptyService()
+		{
+			// Arrange
+			HashSet<string> serviceTypes = [string.Empty];
+
+			var rule = new StringCannotBeEmptyOrNull(string.Empty, "SupportedServiceTypes.ServiceTypes[]");
+
+			// Act & Assert
+			Assert.Throws<BusinessRuleValidationException>(() => SupportedServiceTypes.Create(serviceTypes));
+		}
+
+		[Fact]
+		public void SupportedServices_ShouldThrowBusinessRuleValidationException_WhenReceivesANullService()
+		{
+			// Arrange
+			HashSet<string> serviceTypes = [null!];
+
+			var rule = new StringCannotBeEmptyOrNull(null!, "SupportedServiceTypes.ServiceTypes[]");
 
 			// Act & Assert
 			Assert.Throws<BusinessRuleValidationException>(() => SupportedServiceTypes.Create(serviceTypes));

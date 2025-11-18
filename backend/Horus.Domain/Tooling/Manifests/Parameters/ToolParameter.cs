@@ -1,13 +1,14 @@
 using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.SharedRules;
 using Horus.Domain.Tooling.Manifests.Parameters.Bindings;
+using Horus.Domain.Tooling.Manifests.Parameters.Types;
 
 namespace Horus.Domain.Tooling.Manifests.Parameters
 {
 	public sealed class ToolParameter : ValueObject
 	{
 		public string Name { get; }
-		public string Type { get; }
+		public ParameterType Type { get; }
 		public bool Required { get; } = false;
 		public string? DefaultValue { get; }
 		public ParameterBinding? Binding { get; }
@@ -15,7 +16,7 @@ namespace Horus.Domain.Tooling.Manifests.Parameters
 
 		private ToolParameter(
 				string name,
-				string type,
+				ParameterType type,
 				bool required,
 				string? defaultValue,
 				ParameterBinding? binding,
@@ -40,9 +41,12 @@ namespace Horus.Domain.Tooling.Manifests.Parameters
 			CheckRule(new StringCannotBeEmptyOrNull(name, "ToolParameter.Name"));
 			CheckRule(new StringCannotBeEmptyOrNull(type, "ToolParameter.Type"));
 
+			var paramType = ParameterType.Create(type);
+			paramType.ValidateValue(defaultValue);
+
 			return new ToolParameter(
 				name.Trim(),
-				type.Trim(),
+				paramType,
 				required,
 				defaultValue?.Trim(),
 				binding,

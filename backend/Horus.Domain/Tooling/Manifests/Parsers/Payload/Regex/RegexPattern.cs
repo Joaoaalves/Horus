@@ -1,7 +1,7 @@
 using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.SharedRules;
 
-namespace Horus.Domain.Tooling.Manifests.Parsers.RegexPatterns
+namespace Horus.Domain.Tooling.Manifests.Parsers.Payload.Regex
 {
 	public sealed class RegexPattern : ValueObject
 	{

@@ -1,6 +1,9 @@
 using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.SharedRules;
 using Horus.Domain.Tooling.Manifests.Parameters;
+using Horus.Domain.Tooling.Manifests.Parameters.Types.Rules;
+using Horus.Domain.Tooling.Manifests.Parameters.Types.Rules.Boolean;
+using Horus.Domain.Tooling.Manifests.Parameters.Types.Rules.Enum;
 using Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters.Builders;
 
 namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
@@ -15,7 +18,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			string emptyName = "";
 			string description = "description";
 			string defaultValue = "1";
-			string type = "object";
+			string type = "number";
 			var parameterBinding = ParameterBindingBuilder.Build();
 			bool required = true;
 			var rule = new StringCannotBeEmptyOrNull(emptyName, "ToolParameter.Name");
@@ -42,7 +45,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			string? nullName = null;
 			string description = "description";
 			string defaultValue = "1";
-			string type = "object";
+			string type = "number";
 			var parameterBinding = ParameterBindingBuilder.Build();
 			bool required = true;
 			var rule = new StringCannotBeEmptyOrNull(nullName!, "ToolParameter.Name");
@@ -90,6 +93,87 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 		}
 
 		[Fact]
+		public void ToolParameter_ShouldThrowBusinessRuleValidationException_WhenTypeIsNotSupported()
+		{
+			// Arrange
+			string name = "Valid Name";
+			string description = "description";
+			string defaultValue = "1";
+			string notSupportedType = "int";
+			var parameterBinding = ParameterBindingBuilder.Build();
+			bool required = true;
+			var rule = new ParameterTypeCannotAcceptNotSupportedType(["number"], notSupportedType);
+
+			// Act
+			var exc = Assert.Throws<BusinessRuleValidationException>(
+				() => ToolParameter.Create(
+					name,
+					notSupportedType,
+					required,
+					defaultValue,
+					parameterBinding,
+					description)
+			);
+
+			// Assert
+			Assert.Equal(rule.Message, exc.Message);
+		}
+
+		[Fact]
+		public void ToolParameter_ShouldThrowBusinessRuleValidationException_WhenTypeIsEnumWithEmptyOptions()
+		{
+			// Arrange
+			string name = "Valid Name";
+			string description = "description";
+			string defaultValue = "1";
+			string emptyEnumTipe = "enum:";
+			var parameterBinding = ParameterBindingBuilder.Build();
+			bool required = true;
+			var rule = new EnumOptionsCannotBeEmpty([]);
+
+			// Act
+			var exc = Assert.Throws<BusinessRuleValidationException>(
+				() => ToolParameter.Create(
+					name,
+					emptyEnumTipe,
+					required,
+					defaultValue,
+					parameterBinding,
+					description)
+			);
+
+			// Assert
+			Assert.Equal(rule.Message, exc.Message);
+		}
+
+		[Fact]
+		public void ToolParameter_ShouldThrowBusinessRuleValidationException_WhenDefaultValueIsNotValidForParamType()
+		{
+			// Arrange
+			string name = "Valid Name";
+			string description = "description";
+			string defaultValue = "string";
+			string emptyEnumTipe = "boolean";
+			var parameterBinding = ParameterBindingBuilder.Build();
+			bool required = true;
+			var rule = new ParameterTypeBooleanMustReceiveAValidValue(defaultValue);
+
+			// Act
+			var exc = Assert.Throws<BusinessRuleValidationException>(
+				() => ToolParameter.Create(
+					name,
+					emptyEnumTipe,
+					required,
+					defaultValue,
+					parameterBinding,
+					description)
+			);
+
+			// Assert
+			Assert.Equal(rule.Message, exc.Message);
+		}
+
+		[Fact]
 		public void ToolParameter_ShouldThrowBusinessRuleValidationException_WhenTypeIsNull()
 		{
 			// Arrange
@@ -125,7 +209,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			string name = "Valid Name";
 			string description = "description";
 			string defaultValue = "1";
-			string type = "object";
+			string type = "number";
 			var parameterBinding = ParameterBindingBuilder.Build();
 			bool required = true;
 
@@ -135,7 +219,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			// Assert
 			Assert.NotNull(toolParameter);
 			Assert.Equal(name, toolParameter.Name);
-			Assert.Equal(type, toolParameter.Type);
+			Assert.Equal(type, toolParameter.Type.Value);
 			Assert.Equal(required, toolParameter.Required);
 			Assert.Equal(defaultValue, toolParameter.DefaultValue);
 			Assert.Equal(parameterBinding, toolParameter.Binding);
@@ -148,7 +232,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			// Arrange
 			string name = "Valid Name";
 			string defaultValue = "1";
-			string type = "object";
+			string type = "number";
 			var parameterBinding = ParameterBindingBuilder.Build();
 			bool required = true;
 
@@ -158,7 +242,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			// Assert
 			Assert.NotNull(toolParameter);
 			Assert.Equal(name, toolParameter.Name);
-			Assert.Equal(type, toolParameter.Type);
+			Assert.Equal(type, toolParameter.Type.Value);
 			Assert.Equal(required, toolParameter.Required);
 			Assert.Equal(defaultValue, toolParameter.DefaultValue);
 			Assert.Equal(parameterBinding, toolParameter.Binding);
@@ -172,7 +256,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			string name = "Valid Name";
 			string description = "description";
 			string defaultValue = "1";
-			string type = "object";
+			string type = "number";
 			bool required = true;
 
 			// Act
@@ -181,7 +265,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			// Assert
 			Assert.NotNull(toolParameter);
 			Assert.Equal(name, toolParameter.Name);
-			Assert.Equal(type, toolParameter.Type);
+			Assert.Equal(type, toolParameter.Type.Value);
 			Assert.Equal(required, toolParameter.Required);
 			Assert.Equal(defaultValue, toolParameter.DefaultValue);
 			Assert.Null(toolParameter.Binding);
@@ -194,7 +278,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			// Arrange
 			string name = "Valid Name";
 			string description = "description";
-			string type = "object";
+			string type = "number";
 			var parameterBinding = ParameterBindingBuilder.Build();
 			bool required = true;
 
@@ -204,7 +288,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			// Assert
 			Assert.NotNull(toolParameter);
 			Assert.Equal(name, toolParameter.Name);
-			Assert.Equal(type, toolParameter.Type);
+			Assert.Equal(type, toolParameter.Type.Value);
 			Assert.Equal(required, toolParameter.Required);
 			Assert.Null(toolParameter.DefaultValue);
 			Assert.Equal(parameterBinding, toolParameter.Binding);
@@ -216,7 +300,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 		{
 			// Arrange
 			string name = "Valid Name";
-			string type = "object";
+			string type = "number";
 			bool required = true;
 
 			// Act
@@ -225,7 +309,7 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests.Parameters
 			// Assert
 			Assert.NotNull(toolParameter);
 			Assert.Equal(name, toolParameter.Name);
-			Assert.Equal(type, toolParameter.Type);
+			Assert.Equal(type, toolParameter.Type.Value);
 			Assert.Equal(required, toolParameter.Required);
 			Assert.Null(toolParameter.DefaultValue);
 			Assert.Null(toolParameter.Binding);

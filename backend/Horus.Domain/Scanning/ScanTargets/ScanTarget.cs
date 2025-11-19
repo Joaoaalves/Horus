@@ -1,17 +1,23 @@
 using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.EntityNames;
 using Horus.Domain.Scanning.ScanTargets.ScanTargetMetadatas;
+using Horus.Domain.Scanning.NetworkHosts;
+using Horus.Domain.Findings.Notes;
 
 namespace Horus.Domain.Scanning.ScanTargets
 {
-	public sealed class ScanTarget : Entity, IAggregateRoot
+	public sealed class ScanTarget : AnnotableEntity, IAggregateRoot
 	{
 		// Backing Fields 
+		private readonly List<NetworkHost> _hosts = [];
 
 		// Attributes
 		public ScanTargetId Id { get; private set; } = default!;
 		public EntityName Name { get; private set; } = default!;
 		public ScanTargetMetadata? Metadata { get; private set; }
+
+		// Relations
+		public IReadOnlyCollection<NetworkHost> Hosts => _hosts.AsReadOnly();
 
 		[Obsolete("For EF Only", true)]
 		private ScanTarget() { }
@@ -44,6 +50,17 @@ namespace Horus.Domain.Scanning.ScanTargets
 		{
 			var metadata = ScanTargetMetadata.Create(description);
 			Metadata = metadata;
+		}
+
+		public void AddNetworkHost(NetworkHost host)
+		{
+			if (host is not null)
+				_hosts.Add(host);
+		}
+
+		public void RemoveNetworkHost(NetworkHost host)
+		{
+			_hosts.Remove(host);
 		}
 	}
 }

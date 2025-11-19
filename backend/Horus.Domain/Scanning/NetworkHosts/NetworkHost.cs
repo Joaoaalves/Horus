@@ -1,19 +1,24 @@
+using Horus.Domain.Findings.Notes;
 using Horus.Domain.Scanning.NetworkHosts.HostAddresses;
-using Horus.Domain.SeedWork;
+using Horus.Domain.Scanning.NetworkPorts;
 using Horus.Domain.SharedKernel.EntityDescriptions;
 using Horus.Domain.SharedKernel.EntityNames;
 
 namespace Horus.Domain.Scanning.NetworkHosts
 {
-	public sealed class NetworkHost : Entity
+	public sealed class NetworkHost : AnnotableEntity
 	{
 		// Backing Fields
+		private readonly List<NetworkPort> _ports = [];
 
 		// Attributes
 		public NetworkHostId Id { get; } = default!;
 		public EntityName Name { get; private set; } = default!;
 		public EntityDescription? Description { get; private set; } = default!;
 		public HostAddress Address { get; private set; } = default!;
+
+		// Relations
+		public IReadOnlyCollection<NetworkPort> Ports => _ports.AsReadOnly();
 
 		// For EF
 		[Obsolete("For EF Only", true)]

@@ -6,10 +6,11 @@ using Horus.Domain.Findings.Notes;
 
 namespace Horus.Domain.Scanning.ScanTargets
 {
-	public sealed class ScanTarget : AnnotableEntity, IAggregateRoot
+	public sealed class ScanTarget : Entity, IAnnotable, IAggregateRoot
 	{
 		// Backing Fields 
 		private readonly List<NetworkHost> _hosts = [];
+		private readonly List<Note> _notes = [];
 
 		// Attributes
 		public ScanTargetId Id { get; private set; } = default!;
@@ -18,6 +19,7 @@ namespace Horus.Domain.Scanning.ScanTargets
 
 		// Relations
 		public IReadOnlyCollection<NetworkHost> Hosts => _hosts.AsReadOnly();
+		public IReadOnlyCollection<Note> Notes => _notes.AsReadOnly();
 
 		[Obsolete("For EF Only", true)]
 		private ScanTarget() { }
@@ -61,6 +63,16 @@ namespace Horus.Domain.Scanning.ScanTargets
 		public void RemoveNetworkHost(NetworkHost host)
 		{
 			_hosts.Remove(host);
+		}
+
+		public void AddNote(Note note)
+		{
+			if (note is not null && !_notes.Contains(note)) _notes.Add(note);
+		}
+
+		public void RemoveNote(Note note)
+		{
+			_notes.Remove(note);
 		}
 	}
 }

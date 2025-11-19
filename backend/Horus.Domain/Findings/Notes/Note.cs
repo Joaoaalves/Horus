@@ -18,53 +18,50 @@ namespace Horus.Domain.Findings.Notes
 		// Relations
 		public NetworkHost? NetworkHost { get; private set; }
 		public NetworkHostId? NetworkHostId { get; private set; }
+
 		public ScanTarget? ScanTarget { get; private set; }
 		public ScanTargetId? ScanTargetId { get; private set; }
 
-		// For EF Only
-		[Obsolete("EF Needed", true)]
+		[Obsolete("EF Only", true)]
 		private Note() { }
 
-		private Note(NoteId id, EntityName title, FilePath filePath, NetworkHostId? networkHostId = null, ScanTargetId? scanTargetId = null)
+		private Note(NoteId id, EntityName title, FilePath filePath, NetworkHostId? hostId, ScanTargetId? targetId)
 		{
 			Id = id;
 			Title = title;
 			FilePath = filePath;
-			ScanTargetId = scanTargetId;
-			NetworkHostId = networkHostId;
+
+			NetworkHostId = hostId;
+			ScanTargetId = targetId;
 		}
 
-		public static Note ForNetworkHost(string title, NetworkHostId networkHostId, INotePathHandler findingPathHandler)
+		public static Note ForNetworkHost(string title, NetworkHostId hostId, INotePathHandler pathHandler)
 		{
-			NoteId id = new();
-			EntityName findingTitle = EntityName.FromString(title);
-			FilePath path = findingPathHandler.CreateForNetworkHost(id, networkHostId);
-
+			var id = new NoteId();
 			return new(
 				id,
-				findingTitle,
-				path,
-				networkHostId
+				EntityName.FromString(title),
+				pathHandler.CreateForNetworkHost(id, hostId),
+				hostId,
+				null
 			);
 		}
-		public static Note ForScanTarget(string title, ScanTargetId scanTargetId, INotePathHandler findingPathHandler)
-		{
-			NoteId id = new();
-			EntityName findingTitle = EntityName.FromString(title);
-			FilePath path = findingPathHandler.CreateForScanTarget(id, scanTargetId);
 
+		public static Note ForScanTarget(string title, ScanTargetId targetId, INotePathHandler pathHandler)
+		{
+			var id = new NoteId();
 			return new(
 				id,
-				findingTitle,
-				path,
-				scanTargetId: scanTargetId
+				EntityName.FromString(title),
+				pathHandler.CreateForScanTarget(id, targetId),
+				null,
+				targetId
 			);
 		}
 
 		public void UpdateTitle(string title)
 		{
-			EntityName newTitle = EntityName.FromString(title);
-			Title = newTitle;
+			Title = EntityName.FromString(title);
 		}
 
 		public void MarkUpdated()

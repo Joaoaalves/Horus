@@ -1,14 +1,16 @@
 using Horus.Domain.Findings.Notes;
 using Horus.Domain.Scanning.NetworkHosts.HostAddresses;
 using Horus.Domain.Scanning.NetworkPorts;
+using Horus.Domain.SeedWork;
 using Horus.Domain.SharedKernel.EntityDescriptions;
 using Horus.Domain.SharedKernel.EntityNames;
 
 namespace Horus.Domain.Scanning.NetworkHosts
 {
-	public sealed class NetworkHost : AnnotableEntity
+	public sealed class NetworkHost : Entity, IAnnotable
 	{
 		// Backing Fields
+		private readonly List<Note> _notes = [];
 		private readonly List<NetworkPort> _ports = [];
 
 		// Attributes
@@ -19,6 +21,7 @@ namespace Horus.Domain.Scanning.NetworkHosts
 
 		// Relations
 		public IReadOnlyCollection<NetworkPort> Ports => _ports.AsReadOnly();
+		public IReadOnlyCollection<Note> Notes => _notes.AsReadOnly();
 
 		// For EF
 		[Obsolete("For EF Only", true)]
@@ -58,6 +61,16 @@ namespace Horus.Domain.Scanning.NetworkHosts
 		{
 			var hostAddr = HostAddress.Create(address);
 			Address = hostAddr;
+		}
+
+		public void AddNote(Note note)
+		{
+			if (note is not null && !_notes.Contains(note)) _notes.Add(note);
+		}
+
+		public void RemoveNote(Note note)
+		{
+			_notes.Remove(note);
 		}
 	}
 }

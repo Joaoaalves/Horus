@@ -1,10 +1,14 @@
+using Horus.Domain.Findings.Notes;
 using Horus.Domain.Scanning.NetworkHosts;
 using Horus.Domain.SeedWork;
+using Horus.Tests.Unit.Builders;
+using Moq;
 
 namespace Horus.Tests.Unit.Domain.Scanning.NetworkHosts
 {
 	public sealed class NetworkHostTests
 	{
+		#region Invalid Construct
 		[Fact]
 		public void NetworkHost_ShouldThrowBusinessRuleValidationException_WhenNameIsNull()
 		{
@@ -49,6 +53,9 @@ namespace Horus.Tests.Unit.Domain.Scanning.NetworkHosts
 			Assert.Throws<BusinessRuleValidationException>(() => NetworkHost.Create(name, address));
 		}
 
+		#endregion
+
+		#region  Valid Construct
 		[Fact]
 		public void NetworkHost_ShouldCreate_WhenNameAndAddressAreProvided()
 		{
@@ -64,9 +71,11 @@ namespace Horus.Tests.Unit.Domain.Scanning.NetworkHosts
 			Assert.Equal(name, networkHost.Name.Value);
 			Assert.Equal(address, networkHost.Address.Value);
 		}
+		#endregion
 
+		#region Rename
 		[Fact]
-		public void NetworkHost_ShouldRename_WhenNewNameIsValid()
+		public void Rename_ShouldRename_WhenNewNameIsValid()
 		{
 			// Arrange
 			string name = "Network Host";
@@ -83,7 +92,7 @@ namespace Horus.Tests.Unit.Domain.Scanning.NetworkHosts
 		}
 
 		[Fact]
-		public void NetworkHost_ShouldThrowBusinessRuleValidationException_WhenNewNameIsInvalid()
+		public void Rename_ShouldThrowBusinessRuleValidationException_WhenNewNameIsInvalid()
 		{
 			// Arrange
 			string name = "Network Host";
@@ -97,9 +106,11 @@ namespace Horus.Tests.Unit.Domain.Scanning.NetworkHosts
 			var newName = string.Empty;
 			Assert.Throws<BusinessRuleValidationException>(() => networkHost.Rename(newName));
 		}
+		#endregion
 
+		#region  UpdateAddress
 		[Fact]
-		public void NetworkHost_ShouldUpdateAddress_WhenNewAddressIsValid()
+		public void UpdateAddress_ShouldUpdateAddress_WhenNewAddressIsValid()
 		{
 			// Arrange
 			string name = "Network Host";
@@ -114,8 +125,9 @@ namespace Horus.Tests.Unit.Domain.Scanning.NetworkHosts
 			networkHost.UpdateAddress(newAddress);
 			Assert.Equal(newAddress, networkHost.Address.Value);
 		}
+
 		[Fact]
-		public void NetworkHost_ShouldThrowBusinessRuleValidationException_WhenNewAddressIsValid()
+		public void UpdateAddress_ShouldThrowBusinessRuleValidationException_WhenNewAddressIsValid()
 		{
 			// Arrange
 			string name = "Network Host";
@@ -129,5 +141,153 @@ namespace Horus.Tests.Unit.Domain.Scanning.NetworkHosts
 			var newAddress = "http://exa|mple.com";
 			Assert.Throws<BusinessRuleValidationException>(() => networkHost.UpdateAddress(newAddress));
 		}
+		#endregion
+
+		#region IAnnotable - AddNote
+		[Fact]
+		public void AddNote_ShouldReturn_WhenNullNoteIsProvided()
+		{
+			// Arrange
+			Note? note = null;
+			string name = StringBuilder.Build(10);
+			string address = "192.168.0.1";
+			var networkHost = NetworkHost.Create(name, address);
+
+			// Act
+			var exc = Record.Exception(() => networkHost.AddNote(note!));
+
+			// Assert
+			Assert.Null(exc);
+			Assert.Empty(networkHost.Notes);
+		}
+
+		[Fact]
+		public void AddNote_ShouldAddNote_WhenValidNoteIsProvided()
+		{
+			string name = StringBuilder.Build(10);
+			string address = "192.168.0.1";
+			var networkHost = NetworkHost.Create(name, address);
+
+			var noteTile = StringBuilder.Build(10);
+			var fakeNotePathHandler = new Mock<INotePathHandler>();
+			Note note = Note.ForNetworkHost(noteTile, networkHost.Id, fakeNotePathHandler.Object);
+
+			// Act
+			var exc = Record.Exception(() => networkHost.AddNote(note));
+
+			// Assert
+			Assert.Null(exc);
+			Assert.Single(networkHost.Notes);
+		}
+
+		[Fact]
+		public void AddNote_ShouldAddAnotherNote_WhenNotesAreNoteEmpty()
+		{
+			string name = StringBuilder.Build(10);
+			string address = "192.168.0.1";
+			var networkHost = NetworkHost.Create(name, address);
+
+			var noteTile = StringBuilder.Build(10);
+			var fakeNotePathHandler = new Mock<INotePathHandler>();
+			Note note = Note.ForNetworkHost(noteTile, networkHost.Id, fakeNotePathHandler.Object);
+			Note note2 = Note.ForNetworkHost(noteTile, networkHost.Id, fakeNotePathHandler.Object);
+
+			// Act
+			networkHost.AddNote(note);
+			Assert.Single(networkHost.Notes);
+			networkHost.AddNote(note2);
+
+			// Assert
+			Assert.Equal(2, networkHost.Notes.Count);
+			Assert.Contains(note2, networkHost.Notes);
+		}
+
+		[Fact]
+		public void AddNote_ShouldntAddAnotherNote_WhenNotesAreEqualEmpty()
+		{
+			string name = StringBuilder.Build(10);
+			string address = "192.168.0.1";
+			var networkHost = NetworkHost.Create(name, address);
+
+			var noteTile = StringBuilder.Build(10);
+			var fakeNotePathHandler = new Mock<INotePathHandler>();
+			Note note = Note.ForNetworkHost(noteTile, networkHost.Id, fakeNotePathHandler.Object);
+
+			// Act
+			networkHost.AddNote(note);
+			Assert.Single(networkHost.Notes);
+			networkHost.AddNote(note);
+
+			// Assert
+			Assert.Single(networkHost.Notes);
+		}
+		#endregion
+
+		#region IAnnotable - RemoveNote
+		[Fact]
+		public void RemoveNote_ShouldRemoveNote_WhenNoteIsPresent()
+		{
+			string name = StringBuilder.Build(10);
+			string address = "192.168.0.1";
+			var networkHost = NetworkHost.Create(name, address);
+
+			var noteTile = StringBuilder.Build(10);
+			var fakeNotePathHandler = new Mock<INotePathHandler>();
+			Note note = Note.ForNetworkHost(noteTile, networkHost.Id, fakeNotePathHandler.Object);
+			networkHost.AddNote(note);
+
+			// Act
+			Assert.Single(networkHost.Notes);
+			var exc = Record.Exception(() => networkHost.RemoveNote(note));
+
+			// Assert
+			Assert.Null(exc);
+			Assert.Empty(networkHost.Notes);
+		}
+
+		[Fact]
+		public void RemoveNote_ShouldReturn_WhenNoteIsNotPresent()
+		{
+			string name = StringBuilder.Build(10);
+			string address = "192.168.0.1";
+			var networkHost = NetworkHost.Create(name, address);
+
+			var noteTile = StringBuilder.Build(10);
+			var fakeNotePathHandler = new Mock<INotePathHandler>();
+			Note note = Note.ForNetworkHost(noteTile, networkHost.Id, fakeNotePathHandler.Object);
+			Note note2 = Note.ForNetworkHost(noteTile, networkHost.Id, fakeNotePathHandler.Object);
+			networkHost.AddNote(note);
+
+			// Act
+			Assert.Single(networkHost.Notes);
+			var exc = Record.Exception(() => networkHost.RemoveNote(note2));
+
+			// Assert
+			Assert.Null(exc);
+			Assert.Single(networkHost.Notes);
+		}
+
+		[Fact]
+		public void RemoveNote_ShouldReturn_WhenNoteIsNull()
+		{
+			string name = StringBuilder.Build(10);
+			string address = "192.168.0.1";
+			var networkHost = NetworkHost.Create(name, address);
+
+			var noteTile = StringBuilder.Build(10);
+			var fakeNotePathHandler = new Mock<INotePathHandler>();
+			Note note = Note.ForNetworkHost(noteTile, networkHost.Id, fakeNotePathHandler.Object);
+			Note? note2 = null;
+			networkHost.AddNote(note);
+
+			// Act
+			Assert.Single(networkHost.Notes);
+			var exc = Record.Exception(() => networkHost.RemoveNote(note2!));
+
+			// Assert
+			Assert.Null(exc);
+			Assert.Single(networkHost.Notes);
+		}
+		#endregion
 	}
 }

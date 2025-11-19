@@ -2,23 +2,12 @@ using Horus.Domain.SeedWork;
 
 namespace Horus.Domain.Findings.Notes
 {
-	public class AnnotableEntity : Entity
+	public interface IAnnotable
 	{
-		// Backing Field
-		private readonly List<Note> _notes = [];
+		public IReadOnlyCollection<Note> Notes { get; }
 
-		// Relation
-		public IReadOnlyCollection<Note> Notes => _notes.AsReadOnly();
+		public void AddNote(Note note);
 
-		public void AddNote(Note note)
-		{
-			if (note is not null)
-				_notes.Add(note);
-		}
-
-		public void RemoveNote(Note note)
-		{
-			_notes.Remove(note);
-		}
+		public void RemoveNote(Note note);
 	}
 }

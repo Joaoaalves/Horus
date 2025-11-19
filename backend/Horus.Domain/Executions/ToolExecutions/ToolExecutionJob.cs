@@ -71,5 +71,16 @@ namespace Horus.Domain.Executions.ToolExecutions
 			Status = ExecutionStatus.Running;
 			StartedAt = DateTime.UtcNow;
 		}
+
+		public ToolExecutionJob Requeue()
+		{
+			return new ToolExecutionJob(
+				new ToolExecutionJobId(),
+				Parameters,
+				ManifestId,
+				NetworkHostId,
+				NetworkPortId
+			);
+		}
 	}
 }

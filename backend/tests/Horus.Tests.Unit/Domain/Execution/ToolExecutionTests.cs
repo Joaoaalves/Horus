@@ -160,5 +160,45 @@ namespace Horus.Tests.Unit.Domain.Execution
 		}
 
 		#endregion
+
+		#region Requeue
+		[Fact]
+		public void Requeue_ShouldCreateACopyWithNewId_WithCorrectNetworkPort()
+		{
+			// Arrange
+			ToolManifestId manifestId = new();
+			NetworkPortId networkPortId = new();
+			var job = ToolExecutionJob.ForNetworkPort(networkPortId, ValidJson, manifestId);
+
+			// Act
+			var requeued = job.Requeue();
+
+			// Assert
+			Assert.NotNull(requeued);
+			Assert.NotEqual(job, requeued);
+			Assert.Equal(networkPortId, requeued.NetworkPortId);
+			Assert.True(job.QueuedAt < requeued.QueuedAt);
+			Assert.Null(requeued.NetworkHostId);
+		}
+
+		[Fact]
+		public void Requeue_ShouldCreateACopyWithNewId_WithCorrectNetworkHost()
+		{
+			// Arrange
+			ToolManifestId manifestId = new();
+			NetworkHostId networkHostId = new();
+			var job = ToolExecutionJob.ForNetworkHost(networkHostId, ValidJson, manifestId);
+
+			// Act
+			var requeued = job.Requeue();
+
+			// Assert
+			Assert.NotNull(requeued);
+			Assert.NotEqual(job, requeued);
+			Assert.Equal(networkHostId, requeued.NetworkHostId);
+			Assert.True(job.QueuedAt < requeued.QueuedAt);
+			Assert.Null(requeued.NetworkPortId);
+		}
+		#endregion
 	}
 }

@@ -199,6 +199,69 @@ namespace Horus.Tests.Unit.Domain.Execution
 			Assert.True(job.QueuedAt < requeued.QueuedAt);
 			Assert.Null(requeued.NetworkPortId);
 		}
+
+		[Fact]
+		public void Requeue_ShouldCreateNewJobWithSameParameters()
+		{
+			// Arrange
+			ToolManifestId manifestId = new();
+			NetworkHostId networkHostId = new();
+			var job = ToolExecutionJob.ForNetworkHost(networkHostId, ValidJson, manifestId);
+
+			// Act
+			var requeued = job.Requeue();
+
+			// Assert
+			Assert.Equal(job.Parameters.Value, requeued.Parameters.Value);
+		}
+
+		[Fact]
+		public void Requeue_ShouldCreateNewJobWithSameManifestId()
+		{
+			// Arrange
+			ToolManifestId manifestId = new();
+			NetworkHostId networkHostId = new();
+			var job = ToolExecutionJob.ForNetworkHost(networkHostId, ValidJson, manifestId);
+
+			// Act
+			var requeued = job.Requeue();
+
+			// Assert
+			Assert.Equal(job.ManifestId, requeued.ManifestId);
+		}
+
+		[Fact]
+		public void Requeue_ShouldCreateNewJobWithPendingStatus()
+		{
+			// Arrange
+			ToolManifestId manifestId = new();
+			NetworkHostId networkHostId = new();
+			var job = ToolExecutionJob.ForNetworkHost(networkHostId, ValidJson, manifestId);
+			job.Start();
+			job.Finish(false, Json.FromString("""{"error":"failed"}"""));
+
+			// Act
+			var requeued = job.Requeue();
+
+			// Assert
+			Assert.Equal(ExecutionStatus.Pending, requeued.Status);
+		}
+
+		[Fact]
+		public void Requeue_ShouldCreateNewJobWithNullStartedAt()
+		{
+			// Arrange
+			ToolManifestId manifestId = new();
+			NetworkHostId networkHostId = new();
+			var job = ToolExecutionJob.ForNetworkHost(networkHostId, ValidJson, manifestId);
+			job.Start();
+
+			// Act
+			var requeued = job.Requeue();
+
+			// Assert
+			Assert.Equal(default, requeued.StartedAt);
+		}
 		#endregion
 	}
 }

@@ -36,7 +36,7 @@ namespace Horus.Domain.WordlistsManagement.WordlistCategories
 
 			if (description is not null)
 			{
-				categoryDescription = EntityDescription.Create(description.Trim());
+				categoryDescription = EntityDescription.FromString(description.Trim());
 			}
 
 			return new WordlistCategory(

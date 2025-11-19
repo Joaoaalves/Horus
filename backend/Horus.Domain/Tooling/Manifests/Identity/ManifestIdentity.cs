@@ -26,7 +26,7 @@ namespace Horus.Domain.Tooling.Manifests.Identity
 		{
 			var manifestName = EntityName.FromString(name);
 			var manifestDesc = description is not null
-				? EntityDescription.Create(description.Trim())
+				? EntityDescription.FromString(description.Trim())
 				: null;
 
 			return new ManifestIdentity(
@@ -44,7 +44,7 @@ namespace Horus.Domain.Tooling.Manifests.Identity
 			}
 			else
 			{
-				Description = EntityDescription.Create(description.Trim());
+				Description = EntityDescription.FromString(description.Trim());
 			}
 
 		}

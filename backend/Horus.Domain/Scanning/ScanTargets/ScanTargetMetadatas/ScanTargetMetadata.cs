@@ -14,7 +14,7 @@ namespace Horus.Domain.Scanning.ScanTargets.ScanTargetMetadatas
 
 		public static ScanTargetMetadata Create(string description)
 		{
-			var scanTargetDesc = EntityDescription.Create(description);
+			var scanTargetDesc = EntityDescription.FromString(description);
 
 			return new ScanTargetMetadata(scanTargetDesc);
 		}

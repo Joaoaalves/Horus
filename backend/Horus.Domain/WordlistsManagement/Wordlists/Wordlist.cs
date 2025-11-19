@@ -44,7 +44,7 @@ namespace Horus.Domain.WordlistsManagement.Wordlists
 
 			if (description is not null)
 			{
-				wordlistDescription = EntityDescription.Create(description.Trim());
+				wordlistDescription = EntityDescription.FromString(description.Trim());
 			}
 
 			return new Wordlist(
@@ -71,7 +71,7 @@ namespace Horus.Domain.WordlistsManagement.Wordlists
 				return;
 			}
 
-			var wordlistDescription = EntityDescription.Create(description.Trim());
+			var wordlistDescription = EntityDescription.FromString(description.Trim());
 			Description = wordlistDescription;
 		}
 

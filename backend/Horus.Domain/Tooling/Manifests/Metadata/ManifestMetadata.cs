@@ -13,7 +13,7 @@ namespace Horus.Domain.Tooling.Manifests.Metadata
 		public SupportedServiceTypes SupportedServices { get; } = default!;
 		public ToolManifestVersion Version { get; } = default!;
 
-		public IReadOnlyList<ToolCategory> Categories => _categories.AsReadOnly();
+		public IReadOnlyCollection<ToolCategory> Categories => _categories.AsReadOnly();
 
 		private ManifestMetadata(IEnumerable<ToolCategory> categories, ManifestSource source, SupportedServiceTypes supportedServices, ToolManifestVersion version)
 		{

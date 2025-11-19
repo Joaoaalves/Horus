@@ -70,9 +70,11 @@ namespace Horus.Tests.Unit.Domain.Tooling.Manifests
 			Assert.Equal(image, toolManifest.Execution.Image);
 			Assert.Equal(commandTemplate, toolManifest.Execution.CommandTemplate.Value);
 
-			Assert.Equal(paramName, toolManifest.Parameters[0].Name);
-			Assert.Equal(paramType, toolManifest.Parameters[0].Type.Value);
-			Assert.Equal(required, toolManifest.Parameters[0].Required);
+			// Parameter
+			var firstParameter = toolManifest.Parameters.First();
+			Assert.Equal(paramName, firstParameter.Name);
+			Assert.Equal(paramType, firstParameter.Type.Value);
+			Assert.Equal(required, firstParameter.Required);
 
 			Assert.Equal(parserType, toolManifest.ResultParser.Type.Value);
 			Assert.Equal(outputPath, toolManifest.ResultParser.OutputPath.Value);

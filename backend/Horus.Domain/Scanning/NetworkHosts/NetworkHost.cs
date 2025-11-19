@@ -31,7 +31,7 @@ namespace Horus.Domain.Scanning.NetworkHosts
 		{
 			var hostName = EntityName.FromString(name);
 			var hostDesc = description is not null
-				? EntityDescription.Create(description.Trim())
+				? EntityDescription.FromString(description.Trim())
 				: null;
 			var hostAddr = HostAddress.Create(address);
 

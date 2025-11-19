@@ -13,7 +13,7 @@ namespace Horus.Tests.Unit.Domain.SharedKernel
 			string? value = null;
 
 			// Act & Assert
-			Assert.Throws<BusinessRuleValidationException>(() => EntityDescription.Create(value!));
+			Assert.Throws<BusinessRuleValidationException>(() => EntityDescription.FromString(value!));
 		}
 
 		[Fact]
@@ -23,7 +23,7 @@ namespace Horus.Tests.Unit.Domain.SharedKernel
 			string value = string.Empty;
 
 			// Act & Assert
-			Assert.Throws<BusinessRuleValidationException>(() => EntityDescription.Create(value));
+			Assert.Throws<BusinessRuleValidationException>(() => EntityDescription.FromString(value));
 		}
 		[Fact]
 		public void EntityDescription_ShouldThrowBusinessRuleValidation_WhenDescriptionIsLowerThanBoundary()
@@ -32,7 +32,7 @@ namespace Horus.Tests.Unit.Domain.SharedKernel
 			string value = StringBuilder.Build(1);
 
 			// Act & Assert
-			Assert.Throws<BusinessRuleValidationException>(() => EntityDescription.Create(value));
+			Assert.Throws<BusinessRuleValidationException>(() => EntityDescription.FromString(value));
 		}
 
 		[Fact]
@@ -42,7 +42,7 @@ namespace Horus.Tests.Unit.Domain.SharedKernel
 			string value = StringBuilder.Build(301);
 
 			// Act & Assert
-			Assert.Throws<BusinessRuleValidationException>(() => EntityDescription.Create(value));
+			Assert.Throws<BusinessRuleValidationException>(() => EntityDescription.FromString(value));
 		}
 
 		[Fact]
@@ -52,7 +52,7 @@ namespace Horus.Tests.Unit.Domain.SharedKernel
 			string value = StringBuilder.Build(100); // Valid length
 
 			// Act
-			var description = EntityDescription.Create(value);
+			var description = EntityDescription.FromString(value);
 
 			// Assert
 			Assert.Equal(value, description.Value);
@@ -65,7 +65,7 @@ namespace Horus.Tests.Unit.Domain.SharedKernel
 			string value = StringBuilder.Build(100, true); // Valid length with special chars
 
 			// Act
-			var description = EntityDescription.Create(value);
+			var description = EntityDescription.FromString(value);
 
 			// Assert
 			Assert.Equal(value, description.Value);

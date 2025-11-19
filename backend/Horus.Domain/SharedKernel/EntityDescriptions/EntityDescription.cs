@@ -12,7 +12,7 @@ namespace Horus.Domain.SharedKernel.EntityDescriptions
 			Value = value;
 		}
 
-		public static EntityDescription Create(string value)
+		public static EntityDescription FromString(string value)
 		{
 			CheckRule(new StringCannotBeEmptyOrNull(value, nameof(EntityDescription)));
 			CheckRule(new Rules.EntityDescriptionLengthMustBeInRange(value));

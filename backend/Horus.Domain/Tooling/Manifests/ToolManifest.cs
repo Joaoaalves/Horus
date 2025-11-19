@@ -1,4 +1,5 @@
 using Horus.Domain.SeedWork;
+using Horus.Domain.Tooling.Categories;
 using Horus.Domain.Tooling.Manifests.Execution;
 using Horus.Domain.Tooling.Manifests.Identity;
 using Horus.Domain.Tooling.Manifests.Metadata;
@@ -10,18 +11,22 @@ namespace Horus.Domain.Tooling.Manifests
 	public sealed class ToolManifest : Entity, IAggregateRoot
 	{
 		// Backing fields
-		public readonly List<ToolParameter> _parameters = [];
+		private readonly List<ToolParameter> _parameters = [];
+		private readonly List<ToolCategory> _categories = [];
 
 		public ManifestIdentity Identity { get; private set; } = default!;
 		public ManifestMetadata Metadata { get; private set; } = default!;
 		public ManifestExecution Execution { get; private set; } = default!;
-		public IReadOnlyList<ToolParameter> Parameters { get; private set; } = [];
+		public IReadOnlyCollection<ToolParameter> Parameters => _parameters.AsReadOnly();
+		public IReadOnlyCollection<ToolCategory> Categories => _categories.AsReadOnly();
 		public ToolResultParser ResultParser { get; private set; } = default!;
 
 
 		// Timestamps
 		public DateTime CreatedAt { get; } = DateTime.UtcNow;
 		public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
+
+		// Relations
 
 
 		// For EF
@@ -33,6 +38,7 @@ namespace Horus.Domain.Tooling.Manifests
 			ManifestMetadata metadata,
 			ManifestExecution execution,
 			IEnumerable<ToolParameter> parameters,
+			IEnumerable<ToolCategory> toolCategories,
 			ToolResultParser resultParser
 		)
 		{
@@ -40,7 +46,7 @@ namespace Horus.Domain.Tooling.Manifests
 			Metadata = metadata;
 			Execution = execution;
 			_parameters.AddRange(parameters);
-			Parameters = _parameters.AsReadOnly();
+			_categories.AddRange(toolCategories);
 			ResultParser = resultParser;
 		}
 
@@ -49,7 +55,8 @@ namespace Horus.Domain.Tooling.Manifests
 			ManifestMetadata metadata,
 			ManifestExecution execution,
 			IEnumerable<ToolParameter> parameters,
-			ToolResultParser resultParser
+			ToolResultParser resultParser,
+			IEnumerable<ToolCategory>? toolCategories = null
 		)
 		{
 			return new ToolManifest(
@@ -57,6 +64,7 @@ namespace Horus.Domain.Tooling.Manifests
 				metadata,
 				execution,
 				parameters,
+				toolCategories ?? [],
 				resultParser
 			);
 		}
@@ -83,7 +91,6 @@ namespace Horus.Domain.Tooling.Manifests
 		{
 			_parameters.Clear();
 			_parameters.AddRange(parameters);
-			Parameters = _parameters.AsReadOnly();
 			UpdatedAt = DateTime.UtcNow;
 		}
 
